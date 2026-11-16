@@ -29,6 +29,7 @@ import { SHAPE_COLORS_BOOT_SCRIPT } from "@/lib/shapeColors";
 import { SIMPLE_MODE_BOOT_SCRIPT } from "@/lib/simpleMode";
 import { TOOLBAR_SIZE_BOOT_SCRIPT } from "@/lib/toolbarSize";
 import { VIEW_CUBE_POSITION_BOOT_SCRIPT } from "@/lib/viewCubePosition";
+import { withBasePath } from "@/lib/basePath";
 
 const NAME = "layerling";
 const TITLE = "layerling - Free 3D CAD for 3D printing in your browser";
@@ -65,17 +66,17 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   applicationName: NAME,
-  manifest: "/manifest.webmanifest",
+  manifest: withBasePath("/manifest.webmanifest"),
   icons: {
     // Das SVG ist das eigentliche Symbol; die .ico steht daneben fuer alles,
     // was stur /favicon.ico abholt, statt in den Kopf zu sehen.
     icon: [
-      { url: "/assets/layerling/layerling-logo.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "48x48" },
+      { url: withBasePath("/assets/layerling/layerling-logo.svg"), type: "image/svg+xml" },
+      { url: withBasePath("/favicon.ico"), sizes: "48x48" },
     ],
     // iOS nimmt hier ausschliesslich PNG. Stand da ein SVG, legte
     // "Zum Home-Bildschirm" einen Schnappschuss der Seite ab statt des Symbols.
-    apple: { url: "/assets/layerling/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    apple: { url: withBasePath("/assets/layerling/apple-touch-icon.png"), sizes: "180x180", type: "image/png" },
   },
   openGraph: {
     type: "website",

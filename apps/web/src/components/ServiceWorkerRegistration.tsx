@@ -12,6 +12,8 @@ import { offlineAvailable } from "@/lib/offlineSupport";
  */
 export function ServiceWorkerRegistration() {
   useEffect(() => {
+    // Hébergé dans un sous-dossier (collège) : pas de copie hors ligne, 160 Mo par poste n'ont pas d'intérêt en classe.
+    if (process.env.NEXT_PUBLIC_BASE_PATH) return;
     if (!offlineAvailable()) return;
     navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {
       // Without it layerling works exactly as before, just not offline.

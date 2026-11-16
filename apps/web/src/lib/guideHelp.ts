@@ -10,6 +10,7 @@ import {
   type GuideSearchEntry,
 } from "@/lib/guideSearchCore";
 import { hoverTitleOf } from "@/lib/penHoverTip";
+import { withBasePath } from "@/lib/basePath";
 
 /**
  * Interactive Help: from an element of the program to the part of the user guide that is about it.
@@ -248,7 +249,7 @@ const indexes = new Map<string, Promise<GuidePrepared[] | null>>();
 
 /** The address of a language's guide search index. */
 export function guideIndexUrl(language: Language): string {
-  return `/${(LANGUAGE_INFO[language] ?? LANGUAGE_INFO.en).guideDir}/search-index.json`;
+  return withBasePath(`/${(LANGUAGE_INFO[language] ?? LANGUAGE_INFO.en).guideDir}/search-index.json`);
 }
 
 /**

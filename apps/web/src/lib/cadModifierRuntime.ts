@@ -7,13 +7,14 @@ import { localizedError } from "@/lib/userErrors";
 import type { CadModifierDeflection, CadModifierEdge, CadModifierQuality } from "@/lib/cadModifierTypes";
 import type { OcctKernel, ShapeHandle } from "occt-wasm";
 import { tightBendFromMessage } from "@/lib/cadTightBends";
+import { withBasePath } from "@/lib/basePath";
 
 /** The worker's error when no way of cutting a hole of a group came out right (Discussion #1523). */
 export const HOLE_CUT_FAILED_MESSAGE = "A hole of the group could not be cut cleanly";
 
 const occtRuntimeVersion = process.env.NEXT_PUBLIC_OCCT_RUNTIME_VERSION;
 /** Where scripts/copy-occt-wasm.mjs stages the kernel: one folder per kernel version. */
-export const CAD_MODIFIER_RUNTIME_BASE = occtRuntimeVersion ? `/occt/${occtRuntimeVersion}` : "/occt";
+export const CAD_MODIFIER_RUNTIME_BASE = withBasePath(occtRuntimeVersion ? `/occt/${occtRuntimeVersion}` : "/occt");
 
 /**
  * Tessellation deflection used the one time a sketch is first extruded into a

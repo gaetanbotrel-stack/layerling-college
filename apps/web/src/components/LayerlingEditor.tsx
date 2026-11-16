@@ -274,6 +274,11 @@ import { buildSketchLoftFromSelection, canSketchLoft } from "@/lib/sketchLoft";
 import { alignBounds, sizeAlignmentState, sizedShapesForSelection } from "@/lib/alignSize";
 import { ALIGN_PLATE_ID, alignPlateShape, distributedShapesForSelection, distributionState, type DistributeProblem, type DistributeResult } from "@/lib/alignDistribute";
 import { cloneAsGroupChild, meshDataToManifoldMesh, shapeToManifoldSolid, withClosedHolesNote, withConnectorsNote, stretchNotice, stretchLengthLabel, type RebuildStretchedGroup, MAX_STRETCH_LENGTH, DEFAULT_STRETCH_LENGTH, unionOverlappingExportMeshes, exportBodiesWithLooseHoles, formatSectionOffset, SECTION_SEEN_FROM_KEYS, visibleExportShapes, multicolorExportSolids, exportFaceColors, colorSeparatedExportMeshes, disposeManifold, canIntersectShapes, buildIntersectionShapeFromSelection, canHullShapes, buildHullShapeFromSelection, groupedShape, quaternionForShape, rotationFromQuaternion, cleanShapePatch, restoreGroupedChildren, restoreGroupedChildrenForEdges } from "@/lib/editorBooleans";
+import dynamic from "next/dynamic";
+import type { SimulationBody } from "@/components/SimulationLab";
+
+/** The simulation lab loads with its physics engine only when it is opened. */
+const SimulationLab = dynamic(() => import("@/components/SimulationLab"), { ssr: false });
 import { handleViewArrowKey } from "@/lib/viewArrowKeys";
 import { createKeyRepeatBatch } from "@/lib/keyRepeatBatch";
 import { escapeWasHandled } from "@/lib/escapeHandled";
@@ -5284,6 +5289,14 @@ export function LayerlingEditor({
     setNotice,
   });
   const { ontoActivePlate } = buildPlates;
+
+  // Simulation lab: the solids of the design, holes cut, shown in a window where they fall under gravity.
+  const [simulationBodies, setSimulationBodies] = useState<SimulationBody[] | null>(null);
+  const openSimulation = useCallback(async () => {
+    const { visible } = visibleExportShapes(shapesRef.current);
+    const { solids, meshes } = await exportBodiesWithLooseHoles(visible);
+    setSimulationBodies(solids.map((shape, index) => ({ id: shape.id, name: shape.name, color: shape.color, vertices: meshes[index].vertices, faces: meshes[index].faces })));
+  }, []);
   plateResizeRef.current = (before, after) => commitShapes(shapesAfterPlateResize(before, after, shapesRef.current), selectedIdsRef.current);
 
   /**
@@ -18921,6 +18934,7 @@ export function LayerlingEditor({
 
   return (
     <div className={`layerling-editor ${historyViewState ? "history-view-active" : ""} ${focusMode.active ? "focus-mode" : ""}`}>
+      {simulationBodies ? <SimulationLab bodies={simulationBodies} onClose={() => setSimulationBodies(null)} /> : null}
       <SecondaryToolbar
         toolbarMode={toolbarMode}
         projectName={projectName}
@@ -19021,6 +19035,8 @@ export function LayerlingEditor({
         onCenterOnWorkplane={centerSelectionOnWorkplane}
         onBuildPlates={buildPlates.toggleBar}
         buildPlatesActive={buildPlates.barOpen}
+        onSimulation={openSimulation}
+        simulationActive={simulationBodies !== null}
         onDropToWorkplane={dropSelectedToWorkplane}
         onLayFlat={toggleLayFlat}
         layFlatActive={layFlatPickMode}

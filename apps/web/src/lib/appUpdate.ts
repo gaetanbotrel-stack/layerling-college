@@ -126,6 +126,8 @@ export function isNewerVersion(candidate: string, current: string): boolean {
 }
 
 export function githubReleasesLatestApiUrl(sourceCodeUrl: string = SOURCE_CODE_URL): string | null {
+  // Hébergement scolaire (sous-dossier) : aucun appel vers GitHub depuis les postes des élèves.
+  if (process.env.NEXT_PUBLIC_BASE_PATH) return null;
   try {
     const parsed = new URL(sourceCodeUrl);
     if (!parsed.hostname.includes("github.com")) return null;

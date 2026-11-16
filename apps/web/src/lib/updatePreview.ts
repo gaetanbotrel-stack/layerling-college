@@ -11,6 +11,8 @@ const WHATS_NEW_FILE_PATH = "apps/web/src/lib/whatsNew.json";
  * whose source address is not on GitHub, and for a tag that is not a version.
  */
 export function whatsNewFileUrl(tag: string, sourceCodeUrl: string = SOURCE_CODE_URL): string | null {
+  // Hébergement scolaire (sous-dossier) : aucun appel vers GitHub depuis les postes des élèves.
+  if (process.env.NEXT_PUBLIC_BASE_PATH) return null;
   if (!/^v?\d+\.\d+\.\d+$/.test(tag.trim())) return null;
   try {
     const parsed = new URL(sourceCodeUrl);

@@ -29,7 +29,7 @@ export const SIMPLE_MODE_TOOLS: ReadonlySet<string> = new Set([
   "copy", "paste", "duplicate", "delete", "undo", "redo",
   "group", "ungroup",
   "mirror", "chamfer", "fillet", "hollow", "lid", "cookieCutter", "flexi",
-  "align",
+  "align", "simulation",
 ]);
 
 /** Library entries the simple mode keeps, by their ids in the shape catalogue. */

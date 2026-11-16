@@ -23,7 +23,7 @@ import { ribbonSectionOrders, useRibbonOrder } from "@/lib/ribbonOrder";
 import { ribbonToolOrderFor, sortByRibbonToolOrder, useRibbonToolOrder } from "@/lib/ribbonToolOrder";
 import { ribbonCollapsePriority, ribbonFoldOf, useRibbonFold } from "@/lib/ribbonFold";
 import { normalizePolygonSides, normalizeStarInnerPercent, SKETCH_POLYGON_MAX_SIDES, SKETCH_POLYGON_MIN_SIDES, SKETCH_STAR_MAX_INNER_PERCENT, SKETCH_STAR_MIN_INNER_PERCENT } from "@/lib/sketchPrimitives";
-import { SketchBoltCircleIcon, SketchEllipseIcon, SketchHalfCircleIcon, SketchPieSliceIcon, ToolbarAlignIcon, ToolbarAttachmentsIcon, ToolbarBuildPlatesIcon, ToolbarCenterOnWorkplaneIcon, ToolbarChamferIcon, ToolbarCaretDownIcon, ToolbarCookieCutterIcon, ToolbarFlexiIcon, ToolbarLidIcon,
+import { SketchBoltCircleIcon, SketchEllipseIcon, SketchHalfCircleIcon, SketchPieSliceIcon, ToolbarAlignIcon, ToolbarAttachmentsIcon, ToolbarBuildPlatesIcon, ToolbarSimulationIcon, ToolbarCenterOnWorkplaneIcon, ToolbarChamferIcon, ToolbarCaretDownIcon, ToolbarCookieCutterIcon, ToolbarFlexiIcon, ToolbarLidIcon,
   ToolbarCableChannelIcon, ToolbarCopyIcon, ToolbarDuplicateIcon, ToolbarDropToWorkplaneIcon, ToolbarBundleIcon, ToolbarGroupIcon, ToolbarGuideIcon, ToolbarHideSelectedIcon, ToolbarHomeIcon, ToolbarImportIcon, ToolbarIntersectionIcon,ToolbarClearanceIcon, ToolbarPrintCheckIcon, ToolbarHullIcon, ToolbarLoftSketchesIcon, ToolbarKeyboardIcon, ToolbarFilletIcon, ToolbarHistoryIcon, ToolbarHollowIcon, ToolbarOffsetIcon, ToolbarCutOutIcon, ToolbarPunchIcon, ToolbarDeleteFaceIcon, ToolbarSimplifyIcon, ToolbarMakeExactIcon, ToolbarSurfaceTextureIcon, ToolbarPaintIcon, ToolbarMirrorIcon, ToolbarRotationPivotIcon, ToolbarPatternIcon, ToolbarHolePatternIcon, ToolbarFaceToolIcon, ToolbarSupportRibIcon, ToolbarStencilBridgeIcon, ToolbarConstructionLineIcon, ToolbarMiddleLineIcon, ToolbarLayFlatIcon, ToolbarMateFacesIcon, ToolbarNoteIcon, ToolbarSplitIcon, ToolbarPasteIcon, ToolbarRedoIcon, ToolbarSnapGridIcon, ToolbarSettingsIcon, ToolbarShapeAddIcon, ToolbarTrashIcon, ToolbarUngroupIcon, ToolbarUndoIcon, ToolbarVectorExportIcon } from "../icons";
 import { type SketchPrimitive, type SketchTool } from "../SketchWorkspace";
 import { CommandPalette, type PaletteCommand } from "./CommandPalette";
@@ -38,6 +38,7 @@ import type { ShapeAsset, SketchOperation, WorkplaneWorkspaceSettings } from "@/
 import { TopPanel } from "./TopActionPanel";
 import { useToolbarCollapse } from "./useToolbarCollapse";
 import { createHoverOpener, type HoverOpener } from "@/lib/hoverOpen";
+import { withBasePath } from "@/lib/basePath";
 
 
 /** Die Befehle der Suche, die im Verlaufsblick wach bleiben: sie aendern nichts am Entwurf. */
@@ -68,7 +69,7 @@ export function SketchReferenceIcon({ name }: { name: SketchReferenceIconName })
       className="sketch-reference-icon"
       data-sketch-icon={name}
       draggable={false}
-      src={`/assets/editor/${sketchReferenceIcons[name]}`}
+      src={withBasePath(`/assets/editor/${sketchReferenceIcons[name]}`)}
       alt=""
     />
   );
@@ -317,6 +318,8 @@ export function SecondaryToolbar({
   onCenterOnWorkplane,
   onBuildPlates,
   buildPlatesActive,
+  onSimulation,
+  simulationActive,
   onDropToWorkplane,
   onLayFlat,
   layFlatActive,
@@ -506,6 +509,9 @@ export function SecondaryToolbar({
   /** Shows or hides the bar of build plates (Discussion #456). */
   onBuildPlates?: () => void;
   buildPlatesActive?: boolean;
+  /** The simulation lab (physics): opens a window with the solids of the design. */
+  onSimulation?: () => void;
+  simulationActive?: boolean;
   onDropToWorkplane: () => void;
   onLayFlat: () => void;
   layFlatActive: boolean;
@@ -1057,6 +1063,7 @@ export function SecondaryToolbar({
     { id: "layFlat", label: t("editor.tool.layFlat"), icon: ToolbarLayFlatIcon, action: onLayFlat, enabled: canModifySelection, active: layFlatActive, needs: need("selection") },
     { id: "mateFaces", label: t("editor.tool.mateFaces"), icon: ToolbarMateFacesIcon, action: onMateFaces, enabled: canModifySelection, active: mateFacesActive, needs: need("selection") },
     { id: "center", label: t("editor.tool.centerOnWorkplane"), icon: ToolbarCenterOnWorkplaneIcon, action: onCenterOnWorkplane, enabled: canModifySelection, needs: need("selection") },
+    ...(onSimulation ? [{ id: "simulation", label: t("editor.tool.simulation"), icon: ToolbarSimulationIcon, action: onSimulation, enabled: true, active: Boolean(simulationActive) }] : []),
     ...(onBuildPlates ? [{ id: "buildPlates", label: t("editor.tool.buildPlates"), icon: ToolbarBuildPlatesIcon, action: onBuildPlates, enabled: true, active: Boolean(buildPlatesActive) }] : []),
   ];
   const sketchClipboardTools = [
@@ -1135,7 +1142,7 @@ export function SecondaryToolbar({
       >
         <span
           className="shape-menu-thumb"
-          style={{ "--shape-icon": `url(/${shape.menuIcon.replace(/^\/+/, "")})` } as CSSProperties}
+          style={{ "--shape-icon": `url(${withBasePath(`/${shape.menuIcon.replace(/^\/+/, "")}`)})` } as CSSProperties}
         >
           <img src={shape.menuIcon} alt="" draggable={false} />
         </span>
@@ -1864,7 +1871,7 @@ export function SecondaryToolbar({
         {/* The brand, in the same corner as on the start page. Not a link:
             leaving the editor is not something to trigger by accident. */}
         <div className="toolbar-brand">
-          <img src="/assets/layerling/layerling-logo.svg" alt="Layerling" />
+          <img src={withBasePath("/assets/layerling/layerling-logo.svg")} alt="Layerling" />
           <span className="toolbar-brand-text">
             <span className="toolbar-brand-name">layerling</span>
             <span className="toolbar-brand-tagline">{t("brand.tagline")}</span>

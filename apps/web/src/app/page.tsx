@@ -101,6 +101,7 @@ import { designsToRecover, hiddenCopiesOf, isInlineThumbnail, LOST_DESIGNS_RECOV
 import { deleteDesignThumbnail, loadDesignThumbnails, saveDesignThumbnail } from "@/lib/designThumbnailStore";
 import { DEFAULT_SNAP_GRID, DEFAULT_WORKPLANE_WORKSPACE, normalizeSnapGrid, normalizeWorkspaceSettings, readWorkspaceDefault, workplaneSettingsFingerprint } from "@/lib/workplaneSettings";
 import type { GridSize, ProjectAsset, ProjectAttachment, WorkplaneShape, WorkplaneWorkspaceSettings } from "@/types/layerling";
+import { withBasePath } from "@/lib/basePath";
 
 type AppView = "dashboard" | "editor";
 type ViewMode = "grid" | "list";
@@ -1285,7 +1286,7 @@ export default function Home() {
       // The last opening of this design never finished, most likely the browser ran out of memory:
       // reopening it straight away would crash the page again, so the start page comes first (#1157).
       setDashboardNotice(t("notice.designDidNotOpen", { name: requestedProject.name }));
-      window.history.replaceState(null, "", "/");
+      window.history.replaceState(null, "", withBasePath("/"));
     } else if (params.has("codexBooleanCase") || params.get("editor") === "1") {
       if (requestedProject) {
         setActiveProjectId(requestedProject.id);
@@ -1440,7 +1441,7 @@ export default function Home() {
     setActiveProjectId(null);
     setView("dashboard");
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", "/");
+      window.history.replaceState(null, "", withBasePath("/"));
     }
   }, [activeProjectId, projects]);
 
@@ -1505,7 +1506,7 @@ export default function Home() {
         setActiveProjectId(null);
         setEditorLoading(false);
         setView("dashboard");
-        window.history.replaceState(null, "", "/");
+        window.history.replaceState(null, "", withBasePath("/"));
       });
     return () => {
       canceled = true;
@@ -1597,7 +1598,7 @@ export default function Home() {
         setProjects(storedProjects);
         setActiveProjectId(null);
         setView("dashboard");
-        window.history.replaceState(null, "", "/");
+        window.history.replaceState(null, "", withBasePath("/"));
         return;
       }
       setProjects(storedProjects.map((project) => (project.id === projectId ? { ...project, updatedAt: Date.now() } : project)));
@@ -1609,7 +1610,7 @@ export default function Home() {
     setEditorStarted(true);
     setView("editor");
     if (typeof window !== "undefined") {
-      const nextUrl = projectId ? `/?editor=1&project=${encodeURIComponent(projectId)}` : "/?editor=1";
+      const nextUrl = projectId ? withBasePath(`/?editor=1&project=${encodeURIComponent(projectId)}`) : withBasePath("/?editor=1");
       window.history.replaceState(null, "", nextUrl);
     }
   };
@@ -2946,7 +2947,7 @@ export default function Home() {
     setEditorLoading(false);
     setView("dashboard");
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", "/");
+      window.history.replaceState(null, "", withBasePath("/"));
     }
   };
 
@@ -4067,7 +4068,7 @@ function Dashboard({
     <main className="dashboard-shell">
       <header className="dashboard-topbar">
         <a className="dashboard-brand" href="./" aria-label={t("brand.home")}>
-          <img src="/assets/layerling/layerling-logo.svg" alt="" />
+          <img src={withBasePath("/assets/layerling/layerling-logo.svg")} alt="" />
           <span className="dashboard-brand-text">
             <span className="dashboard-brand-name">layerling</span>
             <span className="dashboard-tagline">{t("brand.tagline")}</span>

@@ -30,7 +30,11 @@ try {
 // can carry it and a browser cache cannot hand out last release's copy.
 const appVersion: string = JSON.parse(readFileSync(path.resolve(process.cwd(), "package.json"), "utf8")).version;
 
+// Hébergement dans un sous-dossier, ex. LAYERLING_BASE_PATH=/modelisation3d (export statique seulement).
+const basePath = (process.env.LAYERLING_BASE_PATH ?? "").trim().replace(/\/+$/, "");
+
 const nextConfig: NextConfig = {
+  ...(isStaticExport && basePath ? { basePath, assetPrefix: basePath } : {}),
   outputFileTracingRoot: path.resolve(process.cwd()),
   devIndicators: false,
   // Keep the live development compiler isolated from `next build`. Sharing
@@ -40,6 +44,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["localhost", "127.0.0.1", ...extraAllowedDevOrigins],
   env: {
     NEXT_PUBLIC_STATIC_EXPORT: isStaticExport ? "true" : "false",
+    NEXT_PUBLIC_BASE_PATH: isStaticExport ? basePath : "",
     NEXT_PUBLIC_OCCT_RUNTIME_VERSION: occtRuntimeVersion,
     NEXT_PUBLIC_JAPANESE_FONT_VERSION: japaneseFontVersion,
     NEXT_PUBLIC_APP_VERSION: appVersion,

@@ -2,6 +2,7 @@ import { FontLoader, type Font, type FontData } from "three/examples/jsm/loaders
 import { isCustomFontId, type CustomTypeface } from "@/lib/customFonts";
 import { chineseFilesFor, type ChineseFile } from "@/lib/chineseText";
 import { textNeedsJapanese, textNeedsJapaneseLevel2 } from "@/lib/japaneseText";
+import { withBasePath } from "@/lib/basePath";
 
 /**
  * The typefaces the text shape offers, loaded on demand.
@@ -186,7 +187,7 @@ export const JAPANESE_FONT = "Japanese";
 type JapaneseFile = "base" | "level2" | ChineseFile;
 
 async function fetchJapaneseFile(file: JapaneseFile): Promise<FontData> {
-  const response = await fetch(`/fonts/japanese/${process.env.NEXT_PUBLIC_JAPANESE_FONT_VERSION ?? ""}/${file}.typeface.json`);
+  const response = await fetch(withBasePath(`/fonts/japanese/${process.env.NEXT_PUBLIC_JAPANESE_FONT_VERSION ?? ""}/${file}.typeface.json`));
   if (!response.ok) throw new Error(`Japanese typeface ${file}: HTTP ${response.status}`);
   return (await response.json()) as FontData;
 }

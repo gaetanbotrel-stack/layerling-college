@@ -30,6 +30,7 @@ import { savedViewForKey } from "@/lib/designView";
 import { viewFaceForKey } from "@/lib/viewCubeDrag";
 import { ZOOM_STEP_IN, ZOOM_STEP_OUT } from "@/lib/workplaneSettings";
 import { timedCameraDamping } from "@/lib/cameraInertia";
+import { withBasePath } from "@/lib/basePath";
 
 /**
  * A second view of the design in a window of its own: the same scene, seen through a camera of
@@ -40,7 +41,7 @@ import { timedCameraDamping } from "@/lib/cameraInertia";
 
 const WINDOW_NAME = "layerling-second-view";
 /** The window's own page (public/view.html), so its address bar names it instead of showing about:blank. */
-const VIEW_PAGE = "/view.html";
+const VIEW_PAGE = withBasePath("/view.html");
 
 /** The OrbitControls settings the second view takes over from the 3D view's camera. */
 const SHARED_CONTROL_SETTINGS = [

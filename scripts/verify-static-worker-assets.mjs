@@ -39,7 +39,8 @@ if (workerChunks.length === 0) {
 }
 
 for (const { path, source } of workerChunks) {
-  if (!source.includes('.p="/_next/"') && !source.includes(".p='/_next/'")) {
+  const base = (process.env.LAYERLING_BASE_PATH ?? "").trim().replace(/\/+$/, "");
+  if (!source.includes(`.p="${base}/_next/"`) && !source.includes(`.p='${base}/_next/'`)) {
     throw new Error(`Worker runtime ${path} does not use the root-relative /_next/ public path.`);
   }
 }

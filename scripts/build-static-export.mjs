@@ -34,6 +34,8 @@ run(["--disable-warning=MODULE_TYPELESS_PACKAGE_JSON", "scripts/build-guide.mjs"
 const nextMajor = Number(createRequire(import.meta.url)("next/package.json").version.split(".")[0]);
 run([nextBin, "build", "apps/web", ...(nextMajor >= 16 ? ["--webpack"] : [])], { STATIC_EXPORT: "true", LAYERLING_BUILD_ID: `${Date.now()}` });
 run(["scripts/verify-static-worker-assets.mjs"]);
+// Hébergement en sous-dossier : préfixe les liens absolus des pages statiques (guide, view.html...). Sans effet à la racine.
+run(["scripts/prefix-base-path.mjs"]);
 run(["scripts/generate-service-worker.mjs"]);
 
 console.log("Static export ready in apps/web/.next-export/");

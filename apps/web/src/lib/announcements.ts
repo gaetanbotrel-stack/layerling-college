@@ -92,6 +92,8 @@ export function bundledAnnouncementList(): Announcement[] {
  * whose source address is not on GitHub: a fork elsewhere has only its own built-in list.
  */
 export function announcementsFileUrl(sourceCodeUrl: string = SOURCE_CODE_URL): string | null {
+  // Hébergement scolaire (sous-dossier) : aucun appel vers GitHub depuis les postes des élèves.
+  if (process.env.NEXT_PUBLIC_BASE_PATH) return null;
   try {
     const parsed = new URL(sourceCodeUrl);
     if (parsed.hostname !== "github.com" && parsed.hostname !== "www.github.com") return null;

@@ -643,6 +643,21 @@ export function ToolbarBuildPlatesIcon(props: IconProps) {
   );
 }
 
+/** Simulation lab: a domino standing, one toppling and a ball rolling in, over the ground. */
+export function ToolbarSimulationIcon(props: IconProps) {
+  return (
+    <ToolbarVectorIcon {...props}>
+      <path d="M4 40h40" />
+      <rect x="20" y="14" width="7" height="26" rx="1.5" {...SOLID} />
+      <rect x="20" y="14" width="7" height="26" rx="1.5" />
+      <path d="M33 38l8-19" strokeWidth="6" strokeOpacity="0.35" />
+      <path d="M33 38l8-19" />
+      <circle cx="9" cy="33" r="5.5" {...SOLID} />
+      <circle cx="9" cy="33" r="5.5" />
+    </ToolbarVectorIcon>
+  );
+}
+
 export function ToolbarCenterOnWorkplaneIcon(props: IconProps) {
   return (
     <ToolbarVectorIcon {...props}>
