@@ -10,13 +10,16 @@ Licence : **AGPL-3.0**, comme le projet d'origine (voir `LICENSE`). Si vous mett
 L'objectif : proposer Layerling à des élèves de collège (6e à 3e) sur un hébergement web mutualisé classique (fichiers statiques), sans compte ni serveur d'applications.
 
 - **Hébergement dans un sous-dossier** (par exemple `https://mon-site.fr/modelisation3d/`) : tous les chemins du logiciel sont préfixés grâce à la variable `LAYERLING_BASE_PATH` (`apps/web/src/lib/basePath.ts`, `scripts/prefix-base-path.mjs`). Le logiciel d'origine suppose d'être à la racine d'une adresse.
-- **Mode simple imposé à tous les élèves**, par le profil d'éditeur prévu par Layerling (`LAYERLING_EDITOR_PROFILE`) : gros boutons, bibliothèque de formes réduite, aucun lien vers l'extérieur.
+- **Mode simple imposé à tous les élèves**, par le profil d'éditeur prévu par Layerling (`LAYERLING_EDITOR_PROFILE`) : bibliothèque de formes réduite, aucun lien vers l'extérieur. Le profil rend aussi visible le bouton **Importer** du groupe « Fichier » (masqué par défaut en mode simple).
+- **Taille des boutons réglable** : 83 % par défaut en mode simple (au lieu de 125 %), et un curseur « Taille des boutons » de 50 à 150 % dans Réglages → Ruban (`apps/web/src/lib/toolbarSize.ts`), enregistré dans le navigateur du poste.
+- **Import d'un objet 3D (OBJ, STL, 3MF, STEP) : une fenêtre demande sa taille** (plus grand côté en mm, 50 mm proposés si l'objet est minuscule ou géant, proportions conservées), propose de **le redresser** (fichiers faits avec Z en haut : Sweet Home 3D, Blender…), puis le pose **au milieu du plateau** (`apps/web/src/lib/importSize.ts`). Les SVG, images et DXF gardent leur propre réglage.
+- **Message clair pour un fichier 3D vide ou abîmé** (« Le fichier n'a pas pu être lu ») au lieu d'une erreur technique.
 - **Aucun appel vers GitHub** depuis les postes (annonces, nouvelles versions) quand le logiciel est hébergé dans un sous-dossier.
 - **Pas de service worker** dans ce mode, pour éviter de copier 160 Mo sur chaque poste.
 - **Pas de stockage serveur partagé** : chaque élève enregistre son fichier `.lyl` sur son poste (supprimer `store.php` de l'export).
 - **Laboratoire de simulation** (physique : dominos, bille, objets « statiques ») : nouveau composant `apps/web/src/components/SimulationLab.tsx`, avec le moteur [Rapier](https://rapier.rs) (Apache-2.0) et three.js. Il se charge à la demande et est accessible depuis le groupe « Organiser » du ruban.
 
-Fichiers principalement concernés : `apps/web/next.config.ts`, `apps/web/src/lib/basePath.ts`, `apps/web/src/components/SimulationLab.tsx`, `apps/web/src/components/workplane/SecondaryToolbar.tsx`, `apps/web/src/components/LayerlingEditor.tsx`, `scripts/build-static-export.mjs`, `scripts/prefix-base-path.mjs`.
+Fichiers principalement concernés : `apps/web/next.config.ts`, `apps/web/src/lib/basePath.ts`, `apps/web/src/lib/importSize.ts`, `apps/web/src/lib/toolbarSize.ts`, `apps/web/src/components/SimulationLab.tsx`, `apps/web/src/components/workplane/SecondaryToolbar.tsx`, `apps/web/src/components/LayerlingEditor.tsx`, `scripts/build-static-export.mjs`, `scripts/prefix-base-path.mjs`.
 
 ## Fabriquer le site
 
@@ -25,7 +28,7 @@ npm ci
 # Git Bash sous Windows : MSYS_NO_PATHCONV=1 évite que « /modelisation3d » soit transformé en chemin Windows
 export MSYS_NO_PATHCONV=1
 export LAYERLING_BASE_PATH=/modelisation3d
-export LAYERLING_EDITOR_PROFILE='{"version":1,"base":"simple","tools":{}}'
+export LAYERLING_EDITOR_PROFILE='{"version":1,"base":"simple","tools":{"import":{"visible":true}}}'
 npm run export
 ```
 

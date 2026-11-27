@@ -27,7 +27,7 @@ import { LANGUAGE_BOOT_SCRIPT } from "@/lib/i18n";
 import { LANGUAGES } from "@/lib/languages";
 import { SHAPE_COLORS_BOOT_SCRIPT } from "@/lib/shapeColors";
 import { SIMPLE_MODE_BOOT_SCRIPT } from "@/lib/simpleMode";
-import { TOOLBAR_SIZE_BOOT_SCRIPT } from "@/lib/toolbarSize";
+import { TOOLBAR_SCALE_BOOT_SCRIPT, TOOLBAR_SIZE_BOOT_SCRIPT } from "@/lib/toolbarSize";
 import { VIEW_CUBE_POSITION_BOOT_SCRIPT } from "@/lib/viewCubePosition";
 import { withBasePath } from "@/lib/basePath";
 
@@ -128,6 +128,7 @@ export default function RootLayout({
           />
         ) : null}
         <script dangerouslySetInnerHTML={{ __html: SIMPLE_MODE_BOOT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: TOOLBAR_SCALE_BOOT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: SHAPE_COLORS_BOOT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: VIEW_CUBE_POSITION_BOOT_SCRIPT }} />
       </head>

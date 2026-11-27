@@ -277,9 +277,12 @@ export async function importModelFiles(
       }
       result.importedFileNames.push(file.name);
     } catch (error) {
+      // Collège : un fichier vide ou abîmé fait planter le lecteur au milieu des octets (« Offset is outside the bounds of
+      // the DataView ») ; l'élève lit plutôt que le fichier n'a pas pu être lu.
+      const brokenBytes = error instanceof RangeError || (error instanceof Error && /DataView|out of bounds|Invalid (typed )?array length/i.test(error.message));
       result.failures.push({
         fileName: file.name,
-        reason: error instanceof Error ? error.message : t("status.importUnreadable"),
+        reason: error instanceof Error && !brokenBytes ? error.message : t("status.importUnreadable"),
       });
     }
   }

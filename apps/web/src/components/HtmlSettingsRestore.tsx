@@ -3,7 +3,7 @@
 import { useLayoutEffect } from "react";
 import { applyShapeColors, getShapeColors } from "@/lib/shapeColors";
 import { applySimpleMode, getSimpleMode } from "@/lib/simpleMode";
-import { applyToolbarSize, getToolbarSize } from "@/lib/toolbarSize";
+import { applyToolbarScale, applyToolbarSize, effectiveToolbarScale, getToolbarSize } from "@/lib/toolbarSize";
 import { applyViewCubePosition, getViewCubePosition } from "@/lib/viewCubePosition";
 
 /**
@@ -16,6 +16,7 @@ export function HtmlSettingsRestore() {
   useLayoutEffect(() => {
     applyToolbarSize(getToolbarSize());
     applySimpleMode(getSimpleMode());
+    applyToolbarScale(effectiveToolbarScale());
     applyShapeColors(getShapeColors());
     applyViewCubePosition(getViewCubePosition());
   }, []);

@@ -5,7 +5,7 @@ import { RibbonButtonsSetting } from "@/components/workplane/RibbonButtonsSettin
 import type { GuideSection } from "@/lib/guideLinks";
 import { MAX_OVERHANG_ANGLE, MIN_OVERHANG_ANGLE } from "@/lib/overhangLimits";
 import { ArchiveRestore, Box as BoxIcon, ChevronDown, Download, Grid3X3, History, MousePointer2, Palette, PanelTop, Plus, RotateCcw, Ruler, Trash2, X } from "lucide-react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useMovablePanel } from "@/lib/useMovablePanel";
 import { SpaceMouseSetting } from "@/components/workplane/SpaceMouseSetting";
 import { printerPlayShapeStart } from "@/lib/printerPlay";
@@ -16,7 +16,7 @@ import { FileBackupSettingsSection } from "@/components/workplane/FileBackupSett
 import { createPortal } from "react-dom";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import { APP_THEME_OPTIONS, type AppThemePreference } from "@/lib/appTheme";
-import { setToolbarSize, TOOLBAR_SIZE_OPTIONS, type ToolbarSize } from "@/lib/toolbarSize";
+import { setToolbarScale, setToolbarSize, shownToolbarScale, subscribeToToolbarSize, TOOLBAR_SCALE_MAX, TOOLBAR_SCALE_MIN, TOOLBAR_SIZE_OPTIONS, type ToolbarSize } from "@/lib/toolbarSize";
 import { useToolbarSize } from "@/lib/useToolbarSize";
 import { useSimpleMode } from "@/lib/useSimpleMode";
 import { useShapeColors } from "@/lib/useShapeColors";
@@ -568,6 +568,7 @@ export function WorkspaceSettingsModal({
   // A setting of this browser, not of the design: read when the window opens (#1386).
   const [startWithCornerRuler, setStartWithCornerRuler] = useState(readStartWithCornerRuler);
   const toolbarSize = useToolbarSize();
+  const toolbarScale = useSyncExternalStore(subscribeToToolbarSize, shownToolbarScale, () => 100);
   const shapeColors = useShapeColors();
   const viewCubePosition = useViewCubePosition();
   const [selectedShapeKind, setSelectedShapeKind] = useState<ShapeKind>(toolbarShapeAssets[0].kind);
@@ -1355,6 +1356,25 @@ export function WorkspaceSettingsModal({
                       ))}
                     </select>
                   </label>
+                  <label className="workspace-select" data-help={t("workspace.toolbarScaleHint")}>
+                    <span>{t("workspace.toolbarScale")} : {toolbarScale} %</span>
+                    <input
+                      type="range"
+                      className="toolbar-scale-range"
+                      min={TOOLBAR_SCALE_MIN}
+                      max={TOOLBAR_SCALE_MAX}
+                      step={1}
+                      value={toolbarScale}
+                      aria-valuetext={`${toolbarScale} %`}
+                      onChange={(event) => setToolbarScale(Number(event.currentTarget.value))}
+                    />
+                  </label>
+                  <p className="workspace-toolbar-scale-hint" style={{ margin: "4px 0 12px", fontSize: 13, opacity: 0.8 }}>
+                    {t("workspace.toolbarScaleHint")}{" "}
+                    <button type="button" className="make-default-button toolbar-scale-reset" style={{ marginLeft: 8 }} onClick={() => setToolbarScale(null)}>
+                      {t("workspace.toolbarScaleReset")}
+                    </button>
+                  </p>
                   <RibbonButtonsSetting />
                 </>
               ) : null}

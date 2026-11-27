@@ -8,7 +8,9 @@ Layerling est une CAO 3D gratuite qui fonctionne directement dans le navigateur,
 ## Ce qui a été adapté
 
 - **Hébergement dans un sous-dossier** d'un site web (par exemple `https://mon-site.fr/modelisation3d/`). Le logiciel d'origine exige d'être à la racine d'une adresse.
-- **Mode simple imposé à tous les élèves** : gros boutons, bibliothèque de formes réduite, aucun lien vers l'extérieur.
+- **Mode simple imposé à tous les élèves** : bibliothèque de formes réduite, aucun lien vers l'extérieur, et un bouton **Importer** dans l'éditeur.
+- **Taille des boutons réglable** : un tiers plus petits par défaut, et un curseur de 50 à 150 % dans Réglages → Ruban.
+- **Import d'objets 3D simplifié** (OBJ, STL, 3MF, STEP) : une fenêtre demande la taille voulue en millimètres, propose de **redresser** un objet qui arrive couché, et le pose **au milieu du plateau**.
 - **Aucun appel vers l'extérieur** depuis les postes des élèves (annonces, vérification de nouvelles versions).
 - **Pas de copie hors ligne** (service worker) dans ce mode, pour ne pas charger 160 Mo sur chaque poste.
 - **Pas de stockage sur le serveur** : chaque élève enregistre son fichier `.lyl` sur son poste ou sur sa clé.
@@ -23,7 +25,7 @@ npm ci
 # Avec Git Bash sous Windows, cette ligne évite que « /modelisation3d » soit transformé en chemin Windows :
 export MSYS_NO_PATHCONV=1
 export LAYERLING_BASE_PATH=/modelisation3d
-export LAYERLING_EDITOR_PROFILE='{"version":1,"base":"simple","tools":{}}'
+export LAYERLING_EDITOR_PROFILE='{"version":1,"base":"simple","tools":{"import":{"visible":true}}}'
 npm run export
 ```
 

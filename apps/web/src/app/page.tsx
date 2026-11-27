@@ -2869,7 +2869,20 @@ export default function Home() {
         },
       });
       if (!result) return;
-      const { shapes: importedShapes, assets: importedAssets, importedFileNames, failures, notes } = result;
+      const { assets: importedAssets, importedFileNames, failures, notes } = result;
+      // Collège : un objet 3D demande sa taille, puis se pose au milieu du plateau (lib/importSize.ts, chargé à la demande).
+      let importedShapes = result.shapes;
+      if (importedShapes.length) {
+        const { askImportSize, importNeedsSize, sizedAndCentredImport } = await import("@/lib/importSize");
+        if (importNeedsSize(result.files)) {
+          const choice = await askImportSize(importedShapes);
+          if (!choice) {
+            setDashboardNotice(t("importSize.cancelled"));
+            return;
+          }
+          importedShapes = sizedAndCentredImport(importedShapes, choice.largest, choice.upright);
+        }
+      }
       const failureSummary = importFailureSummary(failures);
 
       if (!importedShapes.length) {

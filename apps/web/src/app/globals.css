@@ -484,6 +484,13 @@ html[data-simple-mode="on"]:not([data-toolbar-size], [data-simple-mode-enlarge="
   height: auto;
 }
 
+/* Collège : réglage fin de la taille des boutons au-dessus de 100 % (lib/toolbarSize.ts) */
+html[data-toolbar-wrap="on"] .toolbar-mode-content,
+html[data-toolbar-wrap="on"] .sketch-toolbar-ribbon {
+  flex-wrap: wrap;
+  height: auto;
+}
+
 * {
   box-sizing: border-box;
 }

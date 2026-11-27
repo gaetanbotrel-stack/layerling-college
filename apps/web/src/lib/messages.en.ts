@@ -5660,6 +5660,20 @@ export const MESSAGES_EN = {
   "notice.movedToRoot": "{name} moved to the top level.",
   "notice.importing": "Importing {index} of {total}: {name}",
   "notice.importProjectFailed": "Could not create a design for the imported files",
+  "importSize.title": "Size of the imported object",
+  "importSize.current": "Its size in the file: {size} mm",
+  "importSize.label": "Largest side (mm)",
+  "importSize.hint": "The proportions are kept. The object will stand in the middle of the plate.",
+  "importSize.apply": "Import at this size",
+  "importSize.keep": "Keep its own size",
+  "importSize.cancel": "Cancel",
+  "importSize.invalid": "Type a size between 0.01 and 5000 mm.",
+  "importSize.cancelled": "Import cancelled.",
+  "importSize.upright": "Stand the object up",
+  "importSize.uprightHint": "Tick if it arrives lying on its side (file made with Z up).",
+  "workspace.toolbarScale": "Button size",
+  "workspace.toolbarScaleHint": "Fine setting, from 50 to 150 %. It applies to this browser.",
+  "workspace.toolbarScaleReset": "Default size",
 } as const;
 
 export type MessageKey = keyof typeof MESSAGES_EN;

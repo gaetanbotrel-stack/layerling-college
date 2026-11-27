@@ -173,6 +173,7 @@ import { rotateSketchPoints, selectedClosedSketchPoints } from "@/lib/sketchRota
 import { PROJECT_THUMBNAIL_IDLE_MS, projectThumbnailSceneChanged, type ProjectThumbnailSceneKey } from "@/lib/projectThumbnail";
 import { importedShapeFromObj } from "@/lib/objImport";
 import { takeImportSvgWidth } from "@/lib/importPreferences";
+import { askImportSize, importNeedsSize, sizedAndCentredImport } from "@/lib/importSize";
 import { importFailureReason, importFailureSummary, importModelFiles } from "@/lib/modelImport";
 import { dedupeProjectAssets } from "@/lib/projectAssets";
 import { useCustomShapes } from "@/lib/useCustomShapes";
@@ -18014,8 +18015,19 @@ export function LayerlingEditor({
       return none;
     }
     const { assets: importedAssets, files, failures, notes } = result;
+    // Collège : un objet 3D importé à la main demande sa taille, puis se pose au milieu du plateau (lib/importSize.ts).
+    // Le pont IA passe ses propres options et garde l'import d'origine.
+    let readShapes = result.shapes;
+    if (!importOptions && readShapes.length && importNeedsSize(files)) {
+      const choice = await askImportSize(readShapes);
+      if (!choice) {
+        setNotice(t("importSize.cancelled"));
+        return none;
+      }
+      readShapes = sizedAndCentredImport(readShapes, choice.largest, choice.upright);
+    }
     // Read in around the first plate's middle: onto the plate you are on (#1514).
-    const importedShapes = ontoActivePlate(result.shapes);
+    const importedShapes = ontoActivePlate(readShapes);
     if (result.mtlOnly) {
       setNotice(t("status.importMtlAlone"), true);
       return { importedIds: [], failures };
